@@ -10,7 +10,7 @@ This repository provides source code for our paper:
 
 ICLR, 2022
 
-Currently we have released the code for perception networks, and we plan to purify and release other code before July, 2022.
+Currently we have released the code for perception networks, and we are working on purifying and releasing other code in recent days (06/30/2022).
 
 Project Page: https://hyperplane-lab.github.io/vat-mart/
 
