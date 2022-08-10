@@ -1,0 +1,31 @@
+xvfb-run -a python td3_collect_push_door.py \
+    --primact_type pushing  \
+    --action_type PushDoor \
+    --out_dir /home/username/VAT_Mart/VAT_Data/ \
+    --trial_id xxx \
+    --replay_buffer_size 2048  \
+    --pos_range 0.4  \
+    --guidance_reward 300.0 \
+    --success_reward 500 \
+    --threshold 0.4 \
+    --task_lower 10.0 \
+    --task_upper 70.0 \
+    --state_initial_position \
+    --state_joint_origins  \
+    --state_initial_dir \
+    --use_random_up \
+    --up_norm_thresh -0.865 \
+    --pred_world_xyz 0 \
+    --pred_residual_world_xyz 1 \
+    --pred_residual_root_qpos 0 \
+    --train_shape \
+    --state_axes_all \
+    --wp_rot \
+    --no_gui \
+    --num_steps 4 \
+    --train_shape \
+    --out_folder data_idx \
+    --degree_uplimit 1500 \
+    --closeDoor_uplimit 1000 \
+    --num_processes 10 \
+    --saved_epoch 5000

@@ -4,14 +4,9 @@
 """
 
 from __future__ import division
-import sapien.core as sapien
-from sapien.core import Pose, PxrMaterial, SceneConfig
-from transforms3d.quaternions import axangle2quat, qmult
 import numpy as np
 from utils import pose2exp_coordinate, adjoint_matrix
-import random
 from PIL import Image
-import ipdb
 
 
 class Robot(object):
@@ -24,7 +19,6 @@ class Robot(object):
         loader.fix_root_link = True
         loader.scale = scale
         self.robot = loader.load(urdf, {"material": material})
-        #self.robot = loader.load(urdf, material)
         self.robot.name = "robot"
 
         # hand (EE), two grippers, the rest arm joints (if any)
@@ -40,7 +34,6 @@ class Robot(object):
         # set drive joint property
         for joint in self.arm_joints:
             joint.set_drive_property(1000, 400)
-            # print(joint.get_name())
         for joint in self.gripper_joints:
             joint.set_drive_property(200, 60)
 
@@ -63,7 +56,6 @@ class Robot(object):
         loader.fix_root_link = True
         loader.scale = scale
         self.robot = loader.load(urdf, {"material": material})
-        #self.robot = loader.load(urdf, material)
         self.robot.name = "robot"
 
         # hand (EE), two grippers, the rest arm joints (if any)
@@ -117,12 +109,7 @@ class Robot(object):
         ee_jacobian[:3, :] = dense_jacobian[self.end_effector_index * 6 - 3: self.end_effector_index * 6, :self.robot.dof - 2]
         ee_jacobian[3:6, :] = dense_jacobian[(self.end_effector_index - 1) * 6: self.end_effector_index * 6 - 3, :self.robot.dof - 2]
 
-        #numerical_small_bool = ee_jacobian < 1e-1
-        #ee_jacobian[numerical_small_bool] = 0
-        #inverse_jacobian = np.linalg.pinv(ee_jacobian)
         inverse_jacobian = np.linalg.pinv(ee_jacobian, rcond=1e-2)
-        #inverse_jacobian[np.abs(inverse_jacobian) > 5] = 0
-        #print(inverse_jacobian)
         return inverse_jacobian @ twist
 
     def internal_controller(self, qvel: np.ndarray) -> None:
@@ -140,8 +127,6 @@ class Robot(object):
 
         """
         assert qvel.size == len(self.arm_joints)
-        # print("qvel:", qvel)
-        # print("timestep:", self.timestep)
         target_qpos = qvel * self.timestep + self.robot.get_drive_target()[:-2]
         for i, joint in enumerate(self.arm_joints):
             joint.set_drive_velocity_target(qvel[i])
@@ -178,7 +163,6 @@ class Robot(object):
             if i % 100 == 0:
                 spatial_twist = self.calculate_twist((num_steps - i) * self.timestep, target_ee_pose)
             qvel = self.compute_joint_velocity_from_twist(spatial_twist)
-            # qvel = np.array([(random.random() * 2 - 1) * 0.25 for idx in range(6)])
             self.internal_controller(qvel)
             self.env.step()
             self.env.render()
@@ -217,7 +201,6 @@ class Robot(object):
         for idx_step in range(100):
             target_qpos = qvel * self.timestep + self.robot.get_drive_target()[:-2]
             for i, joint in enumerate(self.arm_joints):
-                # ipdb.set_trace()
                 joint.set_drive_velocity_target(qvel[i])
                 joint.set_drive_target(target_qpos[i])
             passive_force = self.robot.compute_passive_force()
@@ -245,7 +228,6 @@ class Robot(object):
             waypoints = []
         self.clear_velocity_command()
         for i in range(n):
-            # print("i:", i)
             passive_force = self.robot.compute_passive_force()
             self.robot.set_qf(passive_force)
             self.env.step()

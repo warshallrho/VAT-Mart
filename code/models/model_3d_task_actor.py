@@ -257,7 +257,6 @@ class ActorNetwork(nn.Module):
 
     def sample_n(self, pcs, task, contact_point, rvs=100):
         batch_size = task.shape[0]
-        # ipdb.set_trace()
         task = task.view(-1, 1)
         f_task = self.mlp_task(task)
         f_ctpt = self.mlp_cp(contact_point)
