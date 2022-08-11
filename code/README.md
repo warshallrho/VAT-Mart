@@ -1,5 +1,5 @@
 # Experiments
-This folder includes the codebase for VAT-Mart project. We use the experiments for the task `push door` as an example, and the scripts for other tasks are similar.
+This folder includes the codebase for VAT-Mart project.
 
 ## Before start
 To train the models, please first go to the `../data` folder and download the pre-processed SAPIEN dataset for VAT-Mart. 
@@ -43,33 +43,62 @@ Install the `xvfb` tool on your server if not installed.
 
 ## Training Pipeline for the VAT-Mart Framework 
 
+We use the experiments for the task `push door` as an example, and the scripts for other tasks are similar.
+
+
 
 ### Train RL for Data Collection
+To efficiently collect action trajectories for completing varying tasks across diverse shapes and contact points,
+we train an RL policy using TD3.
+In the RL training, 
+since the RL policy is trained in the simulation for only collecting training data to supervise the perception networks,
+we can have access to the ground-truth state information of the simulation environment, 
+such as the part poses, joint axis, and gripper poses.
+At the test time, 
+we discard the RL network and only use the learned perception networks to predict the proposed actionable visual priors
 
     sh scripts/run_train_RL_PushDoor.sh
 
+
 ### Collect Data using Trained RL
+We collect action trajectories using the trained RL policy.
 
     sh scripts/run_collect_PushDoor.sh
 
 ### Train Trajectory Scoring Module using Collected Data
+We train the Trajectory Scoring Module using the previously collected data.
+In the following curiosity-driven RL training process, 
+this module will provide the curiosity-feedback for RL,
+and will be reversely finetuned by diverse trajectories proposed by RL.
 
     sh scripts/run_train_critic_PushDoor_before.sh
 
 ### Train Curiosity-Driven RL for Diverse Data Collection
+For discovering diverse trajectories, we leverage curiosity feedback for enabling the learning of perception networks to reversely affect the learning of RL policy.
+
+Specifically, after pretraining the RL policy and training the Trajectory Scoring Module with RL-collected data,
+we finetune the two parts jointly with curiosity-feedback enabled.
 
     sh scripts/run_train_Curiosity_RL_PushDoor.sh
 
 ### Collect Data using Trained Curiosity-Driven RL
-Modify `scripts/run_collect_PushDoor.sh` to collect data using different checkpoints (we use epoch 0, 500, 1000, 1500, 2000, 2500, 3000 in our paper) of the trained curiosity-driven RL.
+As the policy of the curiosity-driven RL differs during different epochs, 
+we collect diverse action trajectories data using policies at different epochs.
+
+
+Please modify `scripts/run_collect_PushDoor.sh` to collect data using different checkpoints (we use epoch 0, 500, 1000, 1500, 2000, 2500, 3000 in our paper) of the trained curiosity-driven RL.
 
 ### Train All Perception Models
 First, train the Trajectory Scoring Module and the Trajectory Proposal Module using data collected by curiosity-driven RL.
+
+These two modules respectively rate the success likelihood of the input action, and propose diverse actions that can complete the input task.
 
     sh scripts/run_train_critic_PushDoor.sh
     sh scripts/run_train_actor_PushDoor.sh
 
 Then, train the Actionability Prediction Module using the trained Trajectory Scoring Module and Trajectory Proposal Module.
+
+This module predicts a per-point actionability score over the input shape.
 
     sh scripts/run_train_score_PushDoor.sh
 
