@@ -1,7 +1,6 @@
 # VAT-Mart: Learning Visual Action Trajectory Proposals for Manipulating 3D ARTiculated Objects
 
 
-
 This repository provides source code for our paper:
 
 [VAT-Mart: Learning Visual Action Trajectory Proposals for Manipulating 3D ARTiculated Objects](https://hyperplane-lab.github.io/vat-mart/)
