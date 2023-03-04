@@ -1,0 +1,25 @@
+xvfb-run -a python eval_sampleSucc.py \
+    --primact_type pushing  \
+    --out_dir /home/wuruihai/VAT_Mart/VAT_Data/ \
+    --trial_id xxx  \
+    --affordance_dir aff_ckpt \
+    --affordance_epoch aff_epoch \
+    --critic_dir  critic_ckpt \
+    --critic_epoch critic_epoch \
+    --actor_dir actor_ckpt \
+    --actor_epoch actor_epoch \
+    --val_data_dir /home/wuruihai/VAT_Mart/VAT_Data/RL_PushDoor_2021090507/EVAL1 \
+    --val_data_dir2 /home/wuruihai/VAT_Mart/VAT_Data/RL_PushDoorCUR_2021092301/NEW_EVAL_CUR_500 \
+    --val_data_dir3 /home/wuruihai/VAT_Mart/VAT_Data/RL_PushDoorCUR_2021092301/NEW_EVAL_CUR_1000 \
+    --val_data_dir4 /home/wuruihai/VAT_Mart/VAT_Data/RL_PushDoorCUR_2021092301/NEW_EVAL_CUR_1500 \
+    --val_data_dir5 /home/wuruihai/VAT_Mart/VAT_Data/RL_PushDoorCUR_2021092301/NEW_EVAL_CUR_2000 \
+    --val_data_dir6 /home/wuruihai/VAT_Mart/VAT_Data/RL_PushDoorCUR_2021092301/NEW_EVAL_CUR_2500 \
+    --val_data_dir7 /home/wuruihai/VAT_Mart/VAT_Data/RL_PushDoorCUR_2021092301/NEW_EVAL_CUR_3000 \
+    --wp_rot            \
+    --num_step 4        \
+    --coordinate_system world \
+    --sample_type fps  \
+    --val_num_data_uplimit 50 \
+    --angle_system 1   \
+    --num_processes 10  \
+    --no_gui
