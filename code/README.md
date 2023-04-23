@@ -29,7 +29,7 @@ Then, if you want to run the 3D experiment, this depends on PointNet++.
     pip install -e .
 
 Finally, run the following to install other packages.
-   
+
     # make sure you are at the repository root directory
     pip install -r requirements.txt
 
@@ -105,6 +105,11 @@ This module predicts a per-point actionability score over the input shape.
 
 ## Evaluation and Visualization
 
-To be updated recently.
+To evaluate and visualize the results, run the following command:
 
+```
+sh scripts/run_eval_sampleSucc_PushDoor.sh
+```
+
+This will use the pretrained networks to propose interactions in the simulation, and the manipulation results are saved in `gif` format. 
 
